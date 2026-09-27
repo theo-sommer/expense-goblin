@@ -19,6 +19,10 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@prisma/client": "^7.10.0",
     "csv-parse": "^7.0.3"
+  },
+  "devDependencies": {
+    "prisma": "^7.10.0"
   }
 }

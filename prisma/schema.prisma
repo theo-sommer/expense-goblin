@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  parentId Int?
+  children Category[] @relation("CategoryHierarchy")
+
+  transaction Transaction[]
+  rules       Rule[]
+}
+
+model Rule {
+  id Int @id @default(autoincrement())
+
+  pattern     String
+  matchType   String   @default("contains") // "contains" | "exact" | "regex"
+  sourceField String   @default("purpose") // "purpose" | "payee" | "both"
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  priority    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([pattern])
+  @@index([categoryId])
+}
+
+model Transaction {
+  id   Int    @id @default(autoincrement())
+  hash String @unique
+
+  date               DateTime
+  valueDate          DateTime?
+  transactionType    String
+  rawSenderRecipient String
+  rawPurpose         String
+  accountNoIban      String // account number or IBAN
+  bic                String?
+  customerRef        String?
+  mandateRef         String?
+  creditorId         String?
+  foreignFees        Float?
+
+  bank    String
+  account String
+
+  amount   Float
+  currency String
+
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categorizationMethod String? // "rule" | "embedding" | "llm" | "manual"
+  confidence           Float?
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+
+  corrections Correction[]
+
+  @@index([date])
+  @@index([categoryId])
+}
+
+model Correction {
+  id Int @id @default(autoincrement())
+
+  fromCategory String?
+  toCategory   String
+  createdAt    DateTime @default(now())
+  note         String?
+
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  transactionId Int
+
+  @@index([transactionId])
+}
