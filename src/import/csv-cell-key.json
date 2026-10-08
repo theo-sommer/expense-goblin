@@ -4,25 +4,85 @@
   "_comment3": "ALWAYS: index the coordinates with arr.at() instead of arr[] because of negative indices",
 
   "cellTypes": {
-    "accountName": { "dataType": "string", "isInEntryRow": false },
-    "accountNumber": { "dataType": "string", "isInEntryRow": false },
-    "iban": { "dataType": "string", "isInEntryRow": false },
-    "csvExportDates": { "dataType": "string", "isInEntryRow": false },
-    "date": { "dataType": "date", "isInEntryRow": true },
-    "valueDate": { "dataType": "date", "isInEntryRow": true },
-    "transactionType": { "dataType": "string", "isInEntryRow": true },
-    "rawSenderRecipient": { "dataType": "string", "isInEntryRow": true },
-    "rawPurpose": { "dataType": "string", "isInEntryRow": true },
-    "accountNoIban": { "dataType": "string", "isInEntryRow": true },
-    "bic": { "dataType": "string", "isInEntryRow": true },
-    "customerRef": { "dataType": "string", "isInEntryRow": true },
-    "mandateRef": { "dataType": "string", "isInEntryRow": true },
-    "creditorId": { "dataType": "string", "isInEntryRow": true },
-    "foreignFees": { "dataType": "float", "isInEntryRow": true },
-    "amount": { "dataType": "float", "isInEntryRow": true },
-    "currency": { "dataType": "string", "isInEntryRow": true },
-    "balanceDate": { "dataType": "date", "isInEntryRow": false },
-    "balanceValue": { "dataType": "float", "isInEntryRow": false }
+    "accountName": {
+      "dataType": "string",
+      "isInEntryRow": false,
+      "optional": false
+    },
+    "accountNumber": {
+      "dataType": "string",
+      "isInEntryRow": false,
+      "optional": false
+    },
+    "iban": { "dataType": "string", "isInEntryRow": false, "optional": false },
+    "csvExportDates": {
+      "dataType": "string",
+      "isInEntryRow": false,
+      "optional": true
+    },
+    "date": { "dataType": "date", "isInEntryRow": true, "optional": false },
+    "valueDate": {
+      "dataType": "date",
+      "isInEntryRow": true,
+      "optional": false
+    },
+    "transactionType": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": false
+    },
+    "rawSenderRecipient": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": false
+    },
+    "rawPurpose": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": false
+    },
+    "accountNoIban": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": false
+    },
+    "bic": { "dataType": "string", "isInEntryRow": true, "optional": true },
+    "customerRef": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": true
+    },
+    "mandateRef": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": true
+    },
+    "creditorId": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": true
+    },
+    "foreignFees": {
+      "dataType": "float",
+      "isInEntryRow": true,
+      "optional": true
+    },
+    "amount": { "dataType": "float", "isInEntryRow": true, "optional": false },
+    "currency": {
+      "dataType": "string",
+      "isInEntryRow": true,
+      "optional": false
+    },
+    "balanceDate": {
+      "dataType": "date",
+      "isInEntryRow": false,
+      "optional": true
+    },
+    "balanceValue": {
+      "dataType": "float",
+      "isInEntryRow": false,
+      "optional": true
+    }
   },
 
   "deutscheBank": {

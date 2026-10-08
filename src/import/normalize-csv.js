@@ -61,39 +61,60 @@ function handleCSVTypeConversion({
   cellCoordY,
   cellValue,
 }) {
-  switch (csvKey.cellTypes[cell].dataType) {
-    case 'string':
-      csvData[cellCoordY][cellCoordX] = cellValue.trim();
-      break;
-    case 'float':
-      // if its empty
-      if (cellValue === '') {
-        csvData[cellCoordY][cellCoordX] = null;
+  // destructure some of the variables in the csv key
+  const { dataType, optional } = csvKey.cellTypes[cell];
+  const { thousandsSeparator, decimalDelimiter, dateDelimiter, dateFormat } =
+    csvKey[bank];
+
+  // useful for the errors
+  const where = `CSV row ${cellCoordY + 1}, column ${cellCoordX + 1} (${cell})`;
+
+  const raw = (cellValue ?? '').trim();
+  let result;
+
+  // handle empty cells
+  if (raw === '') {
+    if (dataType !== 'string' && !optional)
+      throw new Error(`Missing value at ${where}`); // cell shouldn't be empty
+    result = optional ? null : '';
+  } else {
+    // handle not empty cells
+    switch (dataType) {
+      case 'float':
+        result = Number(
+          cellValue
+            .replaceAll(thousandsSeparator, '')
+            .replace(decimalDelimiter, '.'),
+        );
+        if (!Number.isFinite(result))
+          throw new Error(`Invalid number "${raw}" at ${where}`);
         break;
-      }
-      csvData[cellCoordY][cellCoordX] = Number(
-        cellValue
-          .replaceAll(csvKey[bank].thousandsSeparator, '')
-          .replace(csvKey[bank].decimalDelimiter, '.'),
-      );
-      break;
 
-    case 'date':
-      const dateArray = cellValue.split(csvKey[bank].dateDelimiter);
-      let day, month, year;
+      case 'date':
+        const dateArray = cellValue.split(dateDelimiter);
+        let day, month, year;
 
-      for (let i = 0; i < dateArray.length; i++) {
-        if (csvKey[bank].dateFormat[i] == 'd') day = dateArray[i];
-        if (csvKey[bank].dateFormat[i] == 'm') month = dateArray[i];
-        if (csvKey[bank].dateFormat[i] == 'y') year = dateArray[i];
-      }
+        for (let i = 0; i < dateArray.length; i++) {
+          if (dateFormat[i] == 'd') day = dateArray[i];
+          if (dateFormat[i] == 'm') month = dateArray[i];
+          if (dateFormat[i] == 'y') year = dateArray[i];
+        }
 
-      csvData[cellCoordY][cellCoordX] = new Date(
-        Date.UTC(year, month - 1, day),
-      );
-      break;
+        result = new Date(Date.UTC(year, month - 1, day));
 
-    default:
-      break;
+        // check if the day is correct- sometimes there is a day rollover bcs of timezones
+        if (
+          Number.isNaN(result.getTime()) ||
+          result.getUTCDate() !== Number(day)
+        ) {
+          throw new Error(`Invalid date "${raw}" at ${where}`);
+        }
+        break;
+
+      default:
+        result = raw;
+    }
+
+    csvData[cellCoordY][cellCoordX] = result;
   }
 }
