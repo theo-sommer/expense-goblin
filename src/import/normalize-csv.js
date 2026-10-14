@@ -114,7 +114,7 @@ function handleCSVTypeConversion({
       default:
         result = raw;
     }
-
-    csvData[cellCoordY][cellCoordX] = result;
   }
+
+  csvData[cellCoordY][cellCoordX] = result;
 }

@@ -1,7 +1,7 @@
 import csvKey from './csv-cell-key.json' with { type: 'json' };
 
 export function mapEntryRowsToTransactions({ bank, csvData }) {
-  let formattedData = { entryRows: [], singleCellInfo: [] };
+  let formattedData = { entryRows: [], singleCellInfo: {} };
 
   const numberOfRows = csvData.length; // number of rows in the csv as a whole
   let numberOfCols = csvData[0].length;

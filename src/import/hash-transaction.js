@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 
 // clean up functions
-const shortenWhiteSpaces = (s) => (s ?? '').replace(/\s+/g, ' ');
-const removeSpaces = (s) => (s ?? '').replaceAll(' ', '');
+const clean = (s) => (s ?? '').replace(/\s+/g, ' ');
+const cleanIban = (s) => clean(s).replaceAll(' ', '');
 
 export function hashTransaction({ bank, csvData }) {
   const accountId = cleanIban(csvData.singleCellInfo.iban);
@@ -15,19 +15,19 @@ export function hashTransaction({ bank, csvData }) {
       bank,
       accountId,
       row.date.toISOString().slice(0, 10),
-      row.transactionType,
-      row.rawSenderRecipient,
-      row.rawPurpose,
-      row.accountNoIban,
-      row.customerRef,
-      row.mandateRef,
-      row.creditorId,
+      clean(row.transactionType),
+      clean(row.rawSenderRecipient),
+      clean(row.rawPurpose),
+      cleanIban(row.accountNoIban),
+      clean(row.customerRef),
+      clean(row.mandateRef),
+      clean(row.creditorId),
       row.amount.toFixed(2),
     ]);
 
     // set the occurrence counter
-    const occurrence = (seen.get(base) ?? 0) + 1;
-    seen.set(base, occurrence);
+    const occurrence = (seen.get(raw) ?? 0) + 1;
+    seen.set(raw, occurrence);
 
     row.hash = createHash('sha256')
       .update(`${raw}#${occurrence}`)

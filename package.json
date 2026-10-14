@@ -16,10 +16,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "import": "node src/import/run-import.js"
   },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "better-sqlite3": "^13.0.3",
     "csv-parse": "^7.0.3"
   },
   "devDependencies": {
